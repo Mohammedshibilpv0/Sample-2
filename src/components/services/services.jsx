@@ -1,4 +1,6 @@
 import React from "react";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import Card from "../card/card";
 import { FaCode } from "react-icons/fa";
 import { MdLaptopChromebook } from "react-icons/md";
@@ -83,6 +85,26 @@ const serviceData = [
   },
 ];
 
+// Animated Card Wrapper
+const AnimatedCard = ({ children }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.2 });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+      transition={{ 
+        duration: 0.5,
+        ease: "easeOut"
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 const Services = () => {
   return (
     <div className="bg-white dark:bg-[#171717] px-16 pt-9 md:px-32 pb-16">
@@ -108,16 +130,17 @@ const Services = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2  gap-4 mt-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-7">
         {serviceData.map((data, index) => (
-          <Card
-            key={index}
-            content={data.content}
-            icon={data.icon}
-            linkText={data.linkText}
-            title={data.title}
-            linkUrl={data.linkUrl}
-          />
+          <AnimatedCard key={index}>
+            <Card
+              content={data.content}
+              icon={data.icon}
+              linkText={data.linkText}
+              title={data.title}
+              linkUrl={data.linkUrl}
+            />
+          </AnimatedCard>
         ))}
       </div>
     </div>
